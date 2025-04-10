@@ -2,11 +2,17 @@ import React, { useState, useEffect, useRef } from "react";
 import Tesseract from 'tesseract.js';
 import * as tf from "@tensorflow/tfjs";
 import "@tensorflow/tfjs-backend-webgl"; // set backend to webgl
+// import { BarcodeScanner } from "@zxing/library";
+// import { useZXing } from "react-zxing";
+import { ToastContainer, toast } from "react-toastify"; // Importar ToastContainer y toast
+import "react-toastify/dist/ReactToastify.css"; // Importar el CSS para los toasts
 import Loader from "./components/loader";
 import { Webcam } from "./utils/webcam";
 import { renderBoxes } from "./utils/renderBox";
 import { non_max_suppression } from "./utils/nonMaxSuppression";
 import "./style/App.css";
+
+// import cedulaImage from './assets/CedulaMia.jpeg';
 
 // Correr en local para servidor -> http-server -c1 --cors .
 
@@ -26,6 +32,7 @@ function shortenedCol(arrayofarray, indexlist) {
 const App = () => {
   const [loading, setLoading] = useState({ loading: true, progress: 0 });
   const [capturedImage, setCapturedImage] = useState(null);
+  const [barcode, setBarcode] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const webcam = new Webcam();
@@ -103,14 +110,17 @@ const App = () => {
       const cedula = cedulaMatches[0]; // El primer resultado encontrado
 
       console.log('Cédula extraída:', cedula);
-      alert(`Cédula extraída: ${cedula}`); // Mostrar la cédula en la UI
+      // Reemplaza el alert con un toast de react-toastify
+      toast.success(`Cédula extraída: ${cedula}`); // Mostrar el toast en lugar del alert
 
       // Hacer algo con la cédula extraída
     } else {
       console.log('No se encontró una cédula en el texto extraído.');
+      toast.error("No se encontró una cédula en el texto extraído.");
     }
     }).catch((error) => {
       console.error("Error al procesar la imagen con Tesseract:", error);
+      toast.error("Hubo un error al procesar la imagen.");
     });
   };
   
@@ -132,6 +142,15 @@ const App = () => {
       });
     });
   }, []);
+
+  // // Configurar el escáner para leer códigos PDF417
+  // const [data, setData] = useState("No scan yet");
+  // const { ref, result } = useZXing({
+  //   onDetected: (scanResult) => {
+  //     setData(scanResult.getText()); // Almacenar el resultado del escaneo
+  //   },
+  //   formats: [BarcodeScanner.Format.PDF_417], // Especificar PDF417 como formato
+  // });
   console.warn = () => {};
 
   return (
@@ -153,6 +172,12 @@ const App = () => {
           <img src={capturedImage} alt="Captured" />
         </div>
       )}
+       {/* Aquí se incluye el ToastContainer para mostrar los toasts */}
+       <ToastContainer />
+        {/* <div>
+          <h2>Escanear Código de Barras desde Imagen</h2>
+          {barcode ? <p>Código de barras detectado: {barcode}</p> : <p>Cargando imagen...</p>}
+        </div> */}
     </div>
   );
 };

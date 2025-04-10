@@ -14,10 +14,16 @@
   },
   "dependencies": {
     "@tensorflow/tfjs": "^2.8.6",
+    "@zxing/library": "^0.21.3",
+    "dynamsoft-javascript-barcode": "^9.6.42",
     "gh-pages": "^6.3.0",
     "react": "^19.0.0",
+    "react-barcode-reader": "^0.0.2",
     "react-dom": "^19.0.0",
+    "react-qr-barcode-scanner": "^2.0.0",
+    "react-toastify": "^11.0.5",
     "react-webcam": "^7.2.0",
+    "react-zxing": "^2.1.0",
     "tesseract.js": "^6.0.0"
   },
   "devDependencies": {
